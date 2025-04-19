@@ -1,9 +1,6 @@
 package br.com.alura.service;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Scanner;
 
@@ -12,12 +9,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class AbrigoService {
+import br.com.alura.client.ClientHttpConfiguration;
 
+public class AbrigoService {
+	
+	private ClientHttpConfiguration client;
+	
+	public AbrigoService(ClientHttpConfiguration client) {
+		this.client = client;
+	}
+	
 	public void listarAbrigo() throws IOException, InterruptedException {
-		HttpClient client = HttpClient.newHttpClient();
 		String uri = "http://localhost:8080/abrigos";
-		HttpResponse<String> response = dispararRequisicaoGet(client, uri);
+		HttpResponse<String> response = client.dispararRequisicaoGet(uri);
 		String responseBody = response.body();
 		JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
 		System.out.println("Abrigos cadastrados:");
@@ -43,9 +47,8 @@ public class AbrigoService {
 		json.addProperty("telefone", telefone);
 		json.addProperty("email", email);
 
-		HttpClient client = HttpClient.newHttpClient();
 		String uri = "http://localhost:8080/abrigos";
-		HttpResponse<String> response = dispararRequisicaoPost(json, client, uri);
+		HttpResponse<String> response = client.dispararRequisicaoPost(json, uri);
 
 		int statusCode = response.statusCode();
 		String responseBody = response.body();
@@ -56,20 +59,6 @@ public class AbrigoService {
 			System.out.println("Erro ao cadastrar o abrigo:");
 			System.out.println(responseBody);
 		}
-	}
-
-	private HttpResponse<String> dispararRequisicaoGet(HttpClient client, String uri) throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri))
-				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
-		return client.send(request, HttpResponse.BodyHandlers.ofString());
-	}
-
-	private HttpResponse<String> dispararRequisicaoPost(JsonObject json, HttpClient client, String uri) throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).header("Content-Type", "application/json")
-				.method("POST", HttpRequest.BodyPublishers.ofString(json.toString())).build();
-
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		return response;
 	}
 
 }
