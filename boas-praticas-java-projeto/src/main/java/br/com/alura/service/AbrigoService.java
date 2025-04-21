@@ -25,8 +25,10 @@ public class AbrigoService {
 		String uri = "http://localhost:8080/abrigos";
 		HttpResponse<String> response = client.dispararRequisicaoGet(uri);
 		String responseBody = response.body();
+		
 		Abrigo abrigos[] = new ObjectMapper().readValue(responseBody, Abrigo[].class);
 		List<Abrigo> abrigoList = Arrays.stream(abrigos).toList();
+		
 		System.out.println("Abrigos cadastrados:");
 		for (Abrigo abrigo : abrigoList) {
 			long id = abrigo.getId();
