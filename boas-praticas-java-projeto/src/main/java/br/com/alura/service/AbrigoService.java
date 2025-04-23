@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import br.com.alura.client.ClientHttpConfiguration;
 import br.com.alura.domain.Abrigo;
@@ -29,13 +27,20 @@ public class AbrigoService {
 		Abrigo abrigos[] = new ObjectMapper().readValue(responseBody, Abrigo[].class);
 		List<Abrigo> abrigoList = Arrays.stream(abrigos).toList();
 		
+		if(abrigoList.isEmpty()) {
+			System.out.println("Não há abrigos cadastrados");
+		} else {
+			mostrarAbrigos(abrigoList);
+		}
+	}
+	
+	private void mostrarAbrigos(List<Abrigo> abrigoList) {
 		System.out.println("Abrigos cadastrados:");
 		for (Abrigo abrigo : abrigoList) {
 			long id = abrigo.getId();
 			String nome = abrigo.getNome();
 			System.out.println(id + " - " + nome);
 		}
-
 	}
 
 	public void cadastrarAbrigo() throws IOException, InterruptedException {
