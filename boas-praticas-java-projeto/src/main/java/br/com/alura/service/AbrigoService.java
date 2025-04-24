@@ -19,6 +19,8 @@ public class AbrigoService {
 		this.client = client;
 	}
 	
+	Scanner scanner = new Scanner(System.in);
+	
 	public void listarAbrigo() throws IOException, InterruptedException {
 		String uri = "http://localhost:8080/abrigos";
 		HttpResponse<String> response = client.dispararRequisicaoGet(uri);
@@ -44,12 +46,14 @@ public class AbrigoService {
 	}
 
 	public void cadastrarAbrigo() throws IOException, InterruptedException {
-		System.out.println("Digite o nome do abrigo:");
-		String nome = new Scanner(System.in).nextLine();
-		System.out.println("Digite o telefone do abrigo:");
-		String telefone = new Scanner(System.in).nextLine();
-		System.out.println("Digite o email do abrigo:");
-		String email = new Scanner(System.in).nextLine();
+	    System.out.println("Digite o nome do abrigo:");
+	    String nome = scanner.nextLine();
+
+	    System.out.println("Digite o telefone do abrigo:");
+	    String telefone = scanner.nextLine();
+
+	    System.out.println("Digite o email do abrigo:");
+	    String email = scanner.nextLine();
 
 		Abrigo abrigo = new Abrigo(nome, telefone, email);
 		

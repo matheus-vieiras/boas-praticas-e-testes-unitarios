@@ -2,7 +2,10 @@ package br.com.alura.service;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -62,5 +65,23 @@ public class AbrigoServiceTest {
 	        String actual = lines[0];
 
 	        Assertions.assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void deveCadastrarUmNovoAbrigo() throws IOException, InterruptedException {
+			String input = "Petmais\n13991898933\npetmais@gmail.com\n";
+		    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        PrintStream printStream = new PrintStream(baos);
+	        System.setOut(printStream);
+
+	        when(client.dispararRequisicaoPost(any(Abrigo.class), eq("http://localhost:8080/abrigos"))).thenReturn(response);
+	        when(response.statusCode()).thenReturn(200);
+
+	        abrigoService.cadastrarAbrigo();
+
+	        String output = baos.toString();
+	        Assertions.assertTrue(output.contains("Abrigo cadastrado com sucesso!"));
 	}
 }
